@@ -11,8 +11,8 @@ class ReservationsController < ApplicationController
       where_hash[key] = params[key] if params[key]
     end
 
-    if params[:starts_at]
-      reservation_starts_at = DateTime.parse(params[:starts_at])
+    if params[:reservation_starts_at]
+      reservation_starts_at = DateTime.parse(params[:reservation_starts_at])
       where_hash[:reservation_starts_at] = reservation_starts_at
     end
 
@@ -26,7 +26,7 @@ class ReservationsController < ApplicationController
   end
 
   def create
-    reservation_starts_at = DateTime.parse(params[:starts_at])
+    reservation_starts_at = DateTime.parse(params[:reservation_starts_at])
 
     @reservation = Reservation.create(
       contact_email: params[:contact_email],
