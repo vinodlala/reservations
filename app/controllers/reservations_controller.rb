@@ -1,6 +1,26 @@
 class ReservationsController < ApplicationController
   def index
-    @reservations = Reservation.all
+    where_hash = {}
+
+    %i(
+      contact_email
+      contact_phone
+      party_name
+      party_size
+    ).each do |key|
+      where_hash[key] = params[key] if params[key]
+    end
+
+    if params[:starts_at]
+      reservation_starts_at = DateTime.parse(params[:starts_at])
+      where_hash[:reservation_starts_at] = reservation_starts_at
+    end
+
+    @reservations = if where_hash.present?
+                      Reservation.where(where_hash)
+                    else
+                      Reservation.all
+                    end
 
     render
   end
