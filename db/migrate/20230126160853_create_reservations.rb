@@ -5,7 +5,8 @@ class CreateReservations < ActiveRecord::Migration[7.0]
       t.string :contact_phone
       t.string :party_name
       t.integer :party_size
-      t.datetime :reservation_starts_at
+      t.datetime :starts_at
+      t.datetime :ends_at
 
       t.timestamps
     end

@@ -16,7 +16,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_26_160853) do
     t.string "contact_phone"
     t.string "party_name"
     t.integer "party_size"
-    t.datetime "reservation_starts_at"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
