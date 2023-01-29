@@ -36,6 +36,6 @@ class ReservationsController < ApplicationController
       reservation_starts_at: reservation_starts_at,
     )
 
-    render
+    render status: :created
   end
 end

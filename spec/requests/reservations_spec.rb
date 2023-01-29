@@ -20,7 +20,7 @@ RSpec.describe "Reservations", type: :request do
         contact_phone: "2125551234",
         party_name: "name",
         party_size: 4,
-        starts_at: "2023-02-01T11:00:00.000Z",
+        reservation_starts_at: "2023-02-01T11:00:00.000Z",
       }
 
       post "/reservations",
