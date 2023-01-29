@@ -28,13 +28,15 @@ class ReservationAvailabilityChecker
   end
 
   def overlapping_slots
-    # Reservation.where(starts_at: @starts_at, ends_at: @ends_at)
-
     Reservation.where(
-      "(starts_at <= ? and ? < ends_at) or (starts_at < ? and ? <= ends_at)",
+      "(starts_at <= ? and ? < ends_at) or "\
+      "(starts_at < ? and ? <= ends_at) or "\
+      "(? < starts_at and ends_at < ?)",
       starts_at,
       starts_at,
       ends_at,
+      ends_at,
+      starts_at,
       ends_at,
     )
   end
