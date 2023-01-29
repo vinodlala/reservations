@@ -22,7 +22,7 @@ class ReservationsController < ApplicationController
                       Reservation.all
                     end
 
-    render
+    render status: :ok
   end
 
   def create

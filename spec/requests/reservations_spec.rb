@@ -7,7 +7,7 @@ RSpec.describe "Reservations", type: :request do
 
       get "/reservations", headers: headers
 
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
   end
 
@@ -27,7 +27,7 @@ RSpec.describe "Reservations", type: :request do
            headers: headers,
            params: params
 
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(201)
 
       data = JSON.parse(response.body)
 
