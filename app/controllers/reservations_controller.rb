@@ -13,16 +13,38 @@ class ReservationsController < ApplicationController
 
     if params[:starts_at]
       starts_at = DateTime.parse(params[:starts_at])
-      where_hash[:starts_at] = starts_at
     end
 
     if params[:ends_at]
       ends_at = DateTime.parse(params[:ends_at])
-      where_hash[:ends_at] = ends_at
     end
 
-    @reservations = if where_hash.present?
+    @reservations = if where_hash.present? && starts_at.present? && ends_at.present?
+                      Reservation.where(where_hash).where(
+                        "(starts_at <= ? and ? < ends_at) or "\
+                        "(starts_at < ? and ? <= ends_at) or "\
+                        "(? < starts_at and ends_at < ?)",
+                        starts_at,
+                        starts_at,
+                        ends_at,
+                        ends_at,
+                        starts_at,
+                        ends_at,
+                      )
+                    elsif where_hash.present?
                       Reservation.where(where_hash)
+                    elsif starts_at.present? && ends_at.present?
+                      Reservation.where(where_hash).where(
+                        "(starts_at <= ? and ? < ends_at) or "\
+                        "(starts_at < ? and ? <= ends_at) or "\
+                        "(? < starts_at and ends_at < ?)",
+                        starts_at,
+                        starts_at,
+                        ends_at,
+                        ends_at,
+                        starts_at,
+                        ends_at,
+                      )
                     else
                       Reservation.all
                     end

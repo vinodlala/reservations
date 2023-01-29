@@ -1,21 +1,115 @@
 require 'rails_helper'
 
 RSpec.describe "Reservations", type: :request do
-  describe "GET /reservations" do
-    it "returns http ok" do
-      headers = { "ACCEPT" => "application/json" }
+  let(:headers) do
+    { "ACCEPT" => "application/json" }
+  end
 
+  describe "GET /reservations" do
+    before do
+      create(:reservation)
+      create(:reservation, contact_email: "2@usa.net")
+      create(:reservation, contact_phone: "2222222222")
+      create(:reservation, party_name: "name 2")
+      create(:reservation, party_size: "4")
+    end
+
+    it "returns http ok" do
       get "/reservations", headers: headers
 
       expect(response).to have_http_status(200)
+
+      data = JSON.parse(response.body)
+
+      expect(data["reservations"].size).to eq 5
+    end
+
+    context "when contact_email is passed" do
+      it "returns http ok" do
+        get "/reservations", headers: headers, params: { contact_email: "2@usa.net" }
+
+        expect(response).to have_http_status(200)
+
+        data = JSON.parse(response.body)
+
+        expect(data["reservations"].size).to eq 1
+      end
+    end
+
+    context "when contact_phone is passed" do
+      it "returns http ok" do
+        get "/reservations", headers: headers, params: { contact_phone: "2222222222" }
+
+        expect(response).to have_http_status(200)
+
+        data = JSON.parse(response.body)
+
+        expect(data["reservations"].size).to eq 1
+      end
+    end
+
+    context "when party_name is passed" do
+      it "returns http ok" do
+        get "/reservations", headers: headers, params: { party_name: "name 2" }
+
+        expect(response).to have_http_status(200)
+
+        data = JSON.parse(response.body)
+
+        expect(data["reservations"].size).to eq 1
+      end
+    end
+
+    context "when party_size is passed" do
+      it "returns http ok" do
+        get "/reservations",
+            headers: headers,
+            params: {
+              contact_email: "1@usa.net",
+              contact_phone: "2125551234",
+              party_name: "name",
+              party_size: "2",
+            }
+
+        expect(response).to have_http_status(200)
+
+        data = JSON.parse(response.body)
+
+        expect(data["reservations"].size).to eq 1
+      end
+    end
+
+    context "when multiple params are passed" do
+      it "returns http ok" do
+        get "/reservations", headers: headers, params: { party_size: "4" }
+
+        expect(response).to have_http_status(200)
+
+        data = JSON.parse(response.body)
+
+        expect(data["reservations"].size).to eq 1
+      end
+    end
+
+    context "when starts_at and ends_at are passed" do
+      it "returns http ok" do
+        get "/reservations",
+            headers: headers,
+            params: {
+              starts_at: "2023-02-01T22:30:00.000Z",
+              ends_at: "2023-02-01T23:30:00.000Z",
+            }
+
+        expect(response).to have_http_status(200)
+
+        data = JSON.parse(response.body)
+
+        expect(data["reservations"].size).to eq 5
+      end
     end
   end
 
   describe "POST /reservations" do
-    let(:headers) do
-      { "ACCEPT" => "application/json" }
-    end
-
     let(:params) do
       {
         contact_email: "1@usa.net",

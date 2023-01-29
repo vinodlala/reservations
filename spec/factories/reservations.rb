@@ -5,6 +5,6 @@ FactoryBot.define do
     party_name { "name" }
     party_size { 2 }
     starts_at { DateTime.new(2023, 2, 1, 22, 0, 0) }
-    ends_at { DateTime.new(2023, 2, 1, 22, 0, 0) }
+    ends_at { DateTime.new(2023, 2, 1, 23, 0, 0) }
   end
 end
