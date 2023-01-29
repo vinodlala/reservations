@@ -18,7 +18,7 @@ class ReservationAvailabilityChecker
   def call
     current_party_capacity = 0
 
-    same_slots.each do |slot|
+    overlapping_slots.each do |slot|
       current_party_capacity += slot.party_size
     end
 
@@ -27,7 +27,15 @@ class ReservationAvailabilityChecker
     false
   end
 
-  def same_slots
-    Reservation.where(starts_at: @starts_at, ends_at: @ends_at)
+  def overlapping_slots
+    # Reservation.where(starts_at: @starts_at, ends_at: @ends_at)
+
+    Reservation.where(
+      "(starts_at <= ? and ? < ends_at) or (starts_at < ? and ? <= ends_at)",
+      starts_at,
+      starts_at,
+      ends_at,
+      ends_at,
+    )
   end
 end
