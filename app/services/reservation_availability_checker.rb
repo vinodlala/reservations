@@ -1,20 +1,33 @@
 class ReservationAvailabilityChecker
-  DEFAULT_RESERVATION_TIME = 60.minutes
-  def self.call
-    new.call
+  attr_reader :party_size
+  attr_reader :starts_at
+  attr_reader :ends_at
+
+  MAX_PARTY_CAPACITY = 10
+
+  def self.call(party_size:, starts_at:, ends_at:)
+    new(party_size:, starts_at:, ends_at:).call
   end
-  def initialize(party_size:, reservation_starts_at:)
-    @party_size = party_size
-    @reservation_starts_at = reservation_starts_at
-    @reservation_ends_at = reservation_starts_at + DEFAULT_RESERVATION_TIME
+
+  def initialize(party_size:, starts_at:, ends_at:)
+    @party_size = party_size.to_i
+    @starts_at = starts_at
+    @ends_at = ends_at
   end
 
   def call
-    Reservation
-      .where(
-        "reservation_starts_at >= ? or reservation_starts_at < ?",
-        @reservation_starts_at,
-        @reservation_ends_at
-      )
+    current_party_capacity = 0
+
+    same_slots.each do |slot|
+      current_party_capacity += slot.party_size
+    end
+
+    return true if current_party_capacity + party_size <= MAX_PARTY_CAPACITY
+
+    false
+  end
+
+  def same_slots
+    Reservation.where(starts_at: @starts_at, ends_at: @ends_at)
   end
 end

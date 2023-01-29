@@ -20,7 +20,7 @@ RSpec.describe "Reservations", type: :request do
         contact_phone: "2125551234",
         party_name: "name",
         party_size: 4,
-        reservation_starts_at: "2023-02-01T11:00:00.000Z",
+        starts_at: "2023-02-01T11:00:00.000Z",
       }
 
       post "/reservations",
@@ -35,7 +35,7 @@ RSpec.describe "Reservations", type: :request do
       expect(data["reservation"]["contact_phone"]).to eq "2125551234"
       expect(data["reservation"]["party_name"]).to eq "name"
       expect(data["reservation"]["party_size"]).to eq 4
-      expect(data["reservation"]["reservation_starts_at"]).to eq "2023-02-01T11:00:00.000Z"
+      expect(data["reservation"]["starts_at"]).to eq "2023-02-01T11:00:00.000Z"
 
       expect(Reservation.find_by(params)).to be_present
     end

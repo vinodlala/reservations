@@ -11,9 +11,14 @@ class ReservationsController < ApplicationController
       where_hash[key] = params[key] if params[key]
     end
 
-    if params[:reservation_starts_at]
-      reservation_starts_at = DateTime.parse(params[:reservation_starts_at])
-      where_hash[:reservation_starts_at] = reservation_starts_at
+    if params[:starts_at]
+      starts_at = DateTime.parse(params[:starts_at])
+      where_hash[:starts_at] = starts_at
+    end
+
+    if params[:ends_at]
+      ends_at = DateTime.parse(params[:ends_at])
+      where_hash[:ends_at] = ends_at
     end
 
     @reservations = if where_hash.present?
@@ -26,21 +31,40 @@ class ReservationsController < ApplicationController
   end
 
   def create
-    # slot_available = ReservationAvailabilityChecker(
-    #   party_size: params[:party_size],
-    #   reservation_starts_at: params[:reservation_starts_at],
-    # )
-
-    reservation_starts_at = DateTime.parse(params[:reservation_starts_at])
+    unless slot_available?
+      render(
+        json: {
+          message: "We cannot fit that many people for that time slot."
+        },
+        status: :bad_request
+      ) and return
+    end
 
     @reservation = Reservation.create(
       contact_email: params[:contact_email],
       contact_phone: params[:contact_phone],
       party_name: params[:party_name],
       party_size: params[:party_size],
-      reservation_starts_at: reservation_starts_at,
+      starts_at: starts_at,
+      ends_at: ends_at,
     )
 
     render status: :created
+  end
+
+  def slot_available?
+    ReservationAvailabilityChecker.call(
+      party_size: params[:party_size].to_i,
+      starts_at: starts_at,
+      ends_at: ends_at,
+    )
+  end
+
+  def starts_at
+    DateTime.parse(params[:starts_at])
+  end
+
+  def ends_at
+    DateTime.parse(params[:ends_at])
   end
 end
