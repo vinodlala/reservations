@@ -26,6 +26,11 @@ class ReservationsController < ApplicationController
   end
 
   def create
+    # slot_available = ReservationAvailabilityChecker(
+    #   party_size: params[:party_size],
+    #   reservation_starts_at: params[:reservation_starts_at],
+    # )
+
     reservation_starts_at = DateTime.parse(params[:reservation_starts_at])
 
     @reservation = Reservation.create(
