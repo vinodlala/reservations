@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Reservations", type: :request do
   describe "GET /reservations" do
-    it "returns http success" do
+    it "returns http ok" do
       headers = { "ACCEPT" => "application/json" }
 
       get "/reservations", headers: headers
@@ -12,7 +12,7 @@ RSpec.describe "Reservations", type: :request do
   end
 
   describe "POST /reservations" do
-    it "returns http success" do
+    it "returns http created" do
       headers = { "ACCEPT" => "application/json" }
 
       params = {
@@ -36,6 +36,8 @@ RSpec.describe "Reservations", type: :request do
       expect(data["reservation"]["party_name"]).to eq "name"
       expect(data["reservation"]["party_size"]).to eq 4
       expect(data["reservation"]["reservation_starts_at"]).to eq "2023-02-01T11:00:00.000Z"
+
+      expect(Reservation.find_by(params)).to be_present
     end
   end
 end
