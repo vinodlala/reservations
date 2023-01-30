@@ -123,3 +123,6 @@ formatted
 - Refactor the controllers
 - Add authentication, including a users table
 - Switch from `sqlite3` to PostgreSQL or MySQL
+- Add pagination for the list of reservations
+- When creating a reservation, if `ends_at` is not passed, add a default `ends_at` based on `party_size`
+- Handle errors like missing information
