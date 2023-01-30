@@ -62,7 +62,7 @@ class ReservationsController < ApplicationController
       ) and return
     end
 
-    @reservation = Reservation.create(
+    @reservation = Reservation.create!(
       contact_email: params[:contact_email],
       contact_phone: params[:contact_phone],
       party_name: params[:party_name],
